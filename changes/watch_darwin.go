@@ -32,6 +32,9 @@ var (
 	interval = 700 * time.Millisecond
 	now      = C.FSEventStreamEventId((1 << 64) - 1)
 
+	// REVERB - FORK Go 1.10
+	nilCFAllocatorRef C.CFAllocatorRef
+
 	lock sync.Mutex
 )
 
@@ -48,7 +51,7 @@ func startScanner(dir string) {
 	defer C.free(unsafe.Pointer(cpaths))
 
 	path := C.CString(dir)
-	str := C.CFStringCreateWithCString(nil, path, C.kCFStringEncodingUTF8)
+	str := C.CFStringCreateWithCString(nilCFAllocatorRef, path, C.kCFStringEncodingUTF8)
 	defer C.free(unsafe.Pointer(path))
 	defer C.free(unsafe.Pointer(str))
 
